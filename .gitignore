@@ -53,3 +53,15 @@ htmlcov/
 
 # Generated Output Files (data products)
 bases/outputs/*.parquet
+bases/outputs/_temp_*
+
+# Input data files (large Excel files)
+bases/inputs/scouts_base/*.xlsx
+bases/inputs/business/*.xlsx
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Claude temporary files
+.claude/settings.local.json

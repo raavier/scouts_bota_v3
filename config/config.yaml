@@ -1,0 +1,26 @@
+# Scouts Bota v2 - Configuration File
+
+# Application Settings
+app:
+  name: "Scouts Bota v2"
+  version: "4.0"
+  description: "Football Player Analytics Data Processing Pipeline"
+
+# Path Settings (can be overridden by environment variables)
+paths:
+  # Caminho base - ÚNICO QUE O USUÁRIO PRECISA ALTERAR
+  base: "C:/jobs/botafogo/v3/bases"
+  
+  # Caminhos derivados do base (ajustados automaticamente)
+  inputs: "${base}/inputs"
+  scouts_base: "${inputs}/scouts_base"
+  business: "${inputs}/business"
+  outputs: "${base}/outputs"
+  
+  # Arquivos específicos
+  SCOUTS_BASE: "${scouts_base}"
+  WEIGHTS_FILE: "${business}/base_peso.xlsx"
+  OUTPUT_FILE: "${outputs}/consolidated_overral.parquet"
+  OUTPUT_FILE_WEIGHTS: "${outputs}/consolidated_weights.parquet"
+  OUTPUT_FILE_CONTEXT: "${outputs}/consolidated_context.parquet"
+  OUTPUT_FILE_NORMALIZED: "${outputs}/consolidated_normalized.parquet"

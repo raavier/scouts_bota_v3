@@ -1,0 +1,22 @@
+Vamos la, eu vou construir uma base consolidade de scouts utilizando os arquivos do tipo excel em inputs.
+
+La temos business e scouts_base. Em input temos um único arquivo com todos os pesos por posição dos diversos indicadores. 
+Em scouts base temos arquivos de diferentes ligas, e diferentes datas. Nesses arquivos temos o jogadores e as ligas que eles jogam com o valor de cada indicador.
+
+Em outputs é onde ficara o resultado do nosso código, la teremos como resultado diferentes bases de dados consolidados.
+
+em config temos algumas configurações importantes, como o mapping de positions em positions.yaml, vc pode pegar as posições nas tabelas de scouts_base nas colunas primary_position	e secondary_position
+em config.yaml temos os caminhos dos arquivos, em output temos algumas sugestões, mas n se atenha a isso, vamos fazer por partes.
+
+Inicialmente, quero construir o arquivo principal, mas vamos planejar uma série de mudanças, e fazer por partes. Criar testes primeiro, executar uma etapa do teste e só entao avançar.
+Quero criar jupyter notebooks na pasta /code, para que eu possa ir testando etapa por etapa.
+
+Vamos a ideia principal aqui:
+
+Temos uma base de pesos, que tem os pesos de cada indicador para determinada posição em primary_position. 
+A ideia é pegar uma chave única de player_id+competition_id, crie uma de player_name e competition_name que vai servir so para que para melhor visualização, nossa chave principal sera player_id com competition_id.
+Mas isso é para a tabela de overall consolidado, que pegara a chave unica considerando o valor mais recente na coluna player_season_most_recent_match. Os outros dados vamos utilizar em um outro output que vamos ter os dados historicos dos jogadores.
+
+No fim, nos vamos ter uma tabela de overral por posição, e por categorias nas colunas "CLASSIFICACAO RANKING"	e "SUBCLASSIFICACAO RANKING" a coluna CONSIDERAR? é para considerar somente os que tiver com SIM e a coluna "Melhor para" é quando um indicador é bom para cima ou para baixo.
+
+Vamos nos planejar para isso.

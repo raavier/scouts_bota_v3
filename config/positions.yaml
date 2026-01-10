@@ -1,0 +1,166 @@
+# Position Mapping Configuration
+# Maps various position codes to standardized position names
+
+# Mapeamento de Posições - De-Para
+# Normalização de posições específicas para posições padronizadas
+# 
+# Posições padronizadas:
+# GK  - Goalkeeper (Goleiro)
+# CB  - Centre Back (Zagueiro Central)
+# RB  - Right Back (Lateral Direito)
+# LB  - Left Back (Lateral Esquerdo)
+# DM  - Defensive Midfielder (Volante)
+# CM  - Central Midfielder (Meio-campista Central)
+# AM  - Attacking Midfielder (Meia Atacante)
+# W   - Winger (Ponta/Extremo)
+# CF  - Centre Forward (Centroavante)
+
+position_mapping:
+  # Goleiro
+  "Goalkeeper": 
+    position: "GK"
+    position_group: "Goleiro"
+    position_sub_group: "Centro"
+  
+  # Zagueiros
+  "Centre Back": 
+    position: "CB"
+    position_group: "Zagueiro"
+    position_sub_group: "Centro"
+  
+  "Right Centre Back": 
+    position: "RCB"
+    position_group: "Zagueiro - Direita"
+    position_sub_group: "Direita"
+  
+  "Left Centre Back": 
+    position: "LCB"
+    position_group: "Zagueiro - Esquerda"
+    position_sub_group: "Esquerda"
+  
+  # Laterais
+  "Right Back": 
+    position: "RB"
+    position_group: "Lateral - Direito"
+    position_sub_group: "Direita"
+  
+  "Right Wing Back": 
+    position: "RB"
+    position_group: "Lateral - Direito"
+    position_sub_group: "Direita"
+  
+  "Left Back": 
+    position: "LB"
+    position_group: "Lateral - Esquerda"
+    position_sub_group: "Esquerda"
+  
+  "Left Wing Back": 
+    position: "LB"
+    position_group: "Lateral - Esquerda"
+    position_sub_group: "Esquerda"
+  
+  # Volantes / Meio-campistas Defensivos
+  "Centre Defensive Midfielder": 
+    position: "DM"
+    position_group: "Volante"
+    position_sub_group: "Centro"
+  
+  "Right Defensive Midfielder": 
+    position: "DM"
+    position_group: "Volante"
+    position_sub_group: "Direita"
+  
+  "Left Defensive Midfielder": 
+    position: "DM"
+    position_group: "Volante"
+    position_sub_group: "Esquerda"
+  
+  # Meio-campistas Centrais
+  "Right Centre Midfielder": 
+    position: "CM"
+    position_group: "Medio"
+    position_sub_group: "Direita"
+  
+  "Left Centre Midfielder": 
+    position: "CM"
+    position_group: "Medio"
+    position_sub_group: "Esquerda"
+  
+  "Right Midfielder": 
+    position: "AM"
+    position_group: "Meia - Direita"
+    position_sub_group: "Direita"
+  
+  "Left Midfielder": 
+    position: "AM"
+    position_group: "Meia - Esquerda"
+    position_sub_group: "Esquerda"
+  
+  # Meias Atacantes
+  "Centre Attacking Midfielder": 
+    position: "AM"
+    position_group: "Meia"
+    position_sub_group: "Centro"
+  
+  "Right Attacking Midfielder": 
+    position: "AM"
+    position_group: "Extremo - Direita"
+    position_sub_group: "Direita"
+  
+  "Left Attacking Midfielder": 
+    position: "LW"
+    position_group: "Extremo - Esquerda"
+    position_sub_group: "Esquerda"
+  
+  # Pontas / Extremos
+  "Right Wing": 
+    position: "RW"
+    position_group: "Extremo - Direita"
+    position_sub_group: "Direita"
+  
+  "Left Wing": 
+    position: "LW"
+    position_group: "Extremo - Esquerda"
+    position_sub_group: "Esquerda"
+  
+  # Atacantes
+  "Centre Forward": 
+    position: "CF"
+    position_group: "Atacante"
+    position_sub_group: "Centro"
+  
+  "Right Centre Forward": 
+    position: "CF"
+    position_group: "Atacante"
+    position_sub_group: "Direita"
+  
+  "Left Centre Forward": 
+    position: "CF"
+    position_group: "Atacante"
+    position_sub_group: "Esquerda"
+  
+  # Valores vazios ou nulos
+  "": 
+    position: null
+    position_group: null
+    position_sub_group: null
+
+
+
+# Position descriptions (Portuguese)
+position_descriptions:
+  CF: "Centro-avante / Atacante"
+  GK: "Goleiro"
+  LB: "Lateral Esquerdo"
+  DM: "Volante"
+  RB: "Lateral Direito"
+  W: "Extremo"
+  CM: "Meio-campista"
+  CB: "Zagueiro (genérico)"
+  AM: "Meia-atacante"
+
+# Configuração adicional
+config:
+  default_position: null  # Valor padrão para posições não mapeadas
+  case_sensitive: false   # Mapeamento não é case-sensitive
+  trim_whitespace: true 

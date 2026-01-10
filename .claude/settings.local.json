@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -lh bases/outputs/*.parquet)",
+      "Bash(git add .)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nchore: initial project setup\n\nAdd project structure with gitignore, requirements, and base directories\nEOF\n\\)\")"
+    ]
+  }
+}

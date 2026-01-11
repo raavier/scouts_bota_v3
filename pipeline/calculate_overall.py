@@ -150,16 +150,21 @@ def run() -> bool:
         valid_scores = df["overall_score"].notna().sum()
         print(f"\r  ✓ Scores calculados: {valid_scores} válidos de {len(df)}")
 
-        # 3. Calcular Scores por Categoria
-        print("\n[3/4] Calculando scores por categoria...")
+        # 3. Calcular Scores por Categoria e Subcategoria
+        print("\n[3/4] Calculando scores por categoria e subcategoria...")
 
-        # Criar mapeamento indicador -> categoria
+        # Criar mapeamentos indicador -> categoria e subcategoria
         indicador_categoria = dict(zip(
             df_weights["INDICADOR"].str.strip(),
             df_weights["CLASSIFICACAO RANKING"]
         ))
 
-        # Agrupar indicadores por categoria
+        indicador_subcategoria = dict(zip(
+            df_weights["INDICADOR"].str.strip(),
+            df_weights["SUBCLASSIFICACAO RANKING"]
+        ))
+
+        # Agrupar indicadores por categoria (CLASSIFICACAO)
         categorias_indicadores = {}
         for indicador in indicadores_disponiveis:
             categoria = indicador_categoria.get(indicador)
@@ -168,7 +173,16 @@ def run() -> bool:
                     categorias_indicadores[categoria] = []
                 categorias_indicadores[categoria].append(indicador)
 
-        # Calcular score por categoria
+        # Agrupar indicadores por subcategoria (SUBCLASSIFICACAO)
+        subcategorias_indicadores = {}
+        for indicador in indicadores_disponiveis:
+            subcategoria = indicador_subcategoria.get(indicador)
+            if subcategoria and pd.notna(subcategoria):
+                if subcategoria not in subcategorias_indicadores:
+                    subcategorias_indicadores[subcategoria] = []
+                subcategorias_indicadores[subcategoria].append(indicador)
+
+        # Calcular score por categoria (CLASSIFICACAO)
         for categoria, indicadores in categorias_indicadores.items():
             col_name = f"score_{categoria}"
             print(f"    {col_name}...", end="\r")
@@ -181,15 +195,34 @@ def run() -> bool:
 
             df[col_name] = scores_cat
 
-        print(f"\r  ✓ Scores por categoria: {len(categorias_indicadores)} categorias")
+        print(f"\r  ✓ Scores por categoria (CLASSIFICACAO): {len(categorias_indicadores)} categorias")
+
+        # Calcular score por subcategoria (SUBCLASSIFICACAO)
+        for subcategoria, indicadores in subcategorias_indicadores.items():
+            col_name = f"sub_score_{subcategoria}"
+            print(f"    {col_name}...", end="\r")
+
+            scores_subcat = []
+            for idx, row in df.iterrows():
+                position = row["mapped_position"]
+                score = calculate_category_score(row, indicadores, weights_dict, position)
+                scores_subcat.append(score)
+
+            df[col_name] = scores_subcat
+
+        print(f"\r  ✓ Scores por subcategoria (SUBCLASSIFICACAO): {len(subcategorias_indicadores)} subcategorias")
 
         # 4. Gerar Rankings
         print("\n[4/4] Gerando rankings...")
-        df["rank_overall"] = df["overall_score"].rank(ascending=False, method="min")
+
+        # rank_position: ranking por posição (mapped_position)
         df["rank_position"] = df.groupby("mapped_position")["overall_score"].rank(ascending=False, method="min")
 
-        print(f"  ✓ Ranking geral calculado")
-        print(f"  ✓ Ranking por posição calculado")
+        # rank_overall: ranking por competition_id + position_group
+        df["rank_overall"] = df.groupby(["competition_id", "position_group"])["overall_score"].rank(ascending=False, method="min")
+
+        print(f"  ✓ Ranking por posição calculado (rank_position)")
+        print(f"  ✓ Ranking overall por competição e grupo calculado (rank_overall)")
 
         # Salvar
         df.to_parquet(OUTPUT_DIR / "_temp_scouts_scored.parquet", index=False)
@@ -197,12 +230,15 @@ def run() -> bool:
 
         # Resumo final
         score_cols = [c for c in df.columns if c.startswith("score_") or c == "overall_score"]
+        sub_score_cols = [c for c in df.columns if c.startswith("sub_score_")]
         print("\n" + "=" * 70)
         print("RESUMO")
         print("=" * 70)
         print(f"Total de jogadores: {len(df)}")
         print(f"Jogadores com score válido: {valid_scores}")
-        print(f"Colunas de score: {len(score_cols)}")
+        print(f"Colunas de score (CLASSIFICACAO): {len(score_cols)}")
+        print(f"Colunas de sub_score (SUBCLASSIFICACAO): {len(sub_score_cols)}")
+        print(f"Total de colunas de score: {len(score_cols) + len(sub_score_cols)}")
         print("=" * 70)
         print()
 

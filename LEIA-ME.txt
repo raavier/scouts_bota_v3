@@ -21,7 +21,7 @@ COMO USAR:
 ARQUIVOS GERADOS:
 ==========================================
 
-consolidated_overral.parquet
+consolidated_overall.parquet
 - Dados principais com scores e rankings
 - Usar este arquivo para análises
 

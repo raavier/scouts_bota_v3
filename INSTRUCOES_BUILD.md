@@ -104,7 +104,7 @@ dir bases\outputs
 ```
 
 **Arquivos esperados em outputs/**:
-- `consolidated_overral.parquet` (0.34 MB)
+- `consolidated_overall.parquet` (0.34 MB)
 - `consolidated_weights.parquet` (0.03 MB)
 - `consolidated_context.parquet` (5.20 MB)
 - `consolidated_normalized.parquet` (2.98 MB)
@@ -171,7 +171,7 @@ Executado em: 2026-01-10 17:01:40
 - Scores calculados: 4,141 (97.5%)
 
 **Arquivos Gerados**:
-- consolidated_overral.parquet: 0.34 MB
+- consolidated_overall.parquet: 0.34 MB
 - consolidated_weights.parquet: 0.03 MB
 - consolidated_context.parquet: 5.20 MB
 - consolidated_normalized.parquet: 2.98 MB

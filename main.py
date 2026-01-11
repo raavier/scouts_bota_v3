@@ -134,7 +134,7 @@ def main():
         print("✓ PROCESSAMENTO CONCLUÍDO COM SUCESSO!")
         print("=" * 70)
         print(f"\nArquivos gerados em: bases/outputs/")
-        print("  - consolidated_overral.parquet")
+        print("  - consolidated_overall.parquet")
         print("  - consolidated_weights.parquet")
         print("  - consolidated_context.parquet")
         print("  - consolidated_normalized.parquet")

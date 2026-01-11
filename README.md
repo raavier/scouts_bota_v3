@@ -46,7 +46,7 @@ v3/
 │   │       ├── germany_1.xlsx              # 492 jogadores - 1. Bundesliga
 │   │       └── italy_1.xlsx                # 634 jogadores - Serie A
 │   └── outputs/
-│       ├── consolidated_overral.parquet    # Tabela final com scores
+│       ├── consolidated_overall.parquet    # Tabela final com scores
 │       ├── consolidated_weights.parquet    # Pesos utilizados
 │       ├── consolidated_context.parquet    # Metadados
 │       ├── consolidated_normalized.parquet # Dados normalizados
@@ -141,7 +141,7 @@ Define o mapeamento de 23 posições originais para 12 posições padrão, com g
 
 ## 📈 Outputs
 
-### consolidated_overral.parquet
+### consolidated_overall.parquet
 Tabela principal com scores de jogadores.
 
 **Colunas principais**:

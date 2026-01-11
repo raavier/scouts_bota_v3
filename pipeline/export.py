@@ -4,7 +4,7 @@ Módulo 06 - Exportação Final
 Este módulo realiza:
 1. Seleção de colunas finais
 2. Exportação para parquet:
-   - consolidated_overral.parquet (principais dados com scores)
+   - consolidated_overall.parquet (principais dados com scores)
    - consolidated_weights.parquet (tabela de pesos)
    - consolidated_context.parquet (metadados)
    - consolidated_normalized.parquet (valores normalizados)
@@ -43,10 +43,11 @@ def run() -> bool:
         print(f"  ✓ Dados: {len(df)} jogadores, {len(df.columns)} colunas")
         print(f"  ✓ Pesos: {len(df_weights)} indicadores")
 
-        # 2. Exportar consolidated_overral.parquet
-        print("\n[2/4] Exportando consolidated_overral.parquet...")
+        # 2. Exportar consolidated_overall.parquet
+        print("\n[2/4] Exportando consolidated_overall.parquet...")
 
         main_cols = [
+            "unique_key",
             "player_id",
             "competition_id",
             "player_name",
@@ -62,17 +63,21 @@ def run() -> bool:
             "rank_position",
         ]
 
-        # Adicionar colunas de score por categoria
-        score_cols = [c for c in df.columns if c.startswith("score_")]
+        # Adicionar colunas de score por categoria (CLASSIFICACAO)
+        score_cols = [c for c in df.columns if c.startswith("score_") and not c.startswith("sub_score_")]
         main_cols.extend(score_cols)
+
+        # Adicionar colunas de sub_score por subcategoria (SUBCLASSIFICACAO)
+        sub_score_cols = [c for c in df.columns if c.startswith("sub_score_")]
+        main_cols.extend(sub_score_cols)
 
         # Filtrar colunas disponíveis
         available_main_cols = [c for c in main_cols if c in df.columns]
         df_overall = df[available_main_cols].copy()
         df_overall = df_overall.sort_values("rank_overall")
 
-        df_overall.to_parquet(OUTPUT_DIR / "consolidated_overral.parquet", index=False)
-        size_mb = (OUTPUT_DIR / "consolidated_overral.parquet").stat().st_size / (1024 * 1024)
+        df_overall.to_parquet(OUTPUT_DIR / "consolidated_overall.parquet", index=False)
+        size_mb = (OUTPUT_DIR / "consolidated_overall.parquet").stat().st_size / (1024 * 1024)
         print(f"  ✓ Exportado: {len(df_overall)} linhas, {len(df_overall.columns)} colunas ({size_mb:.2f} MB)")
 
         # 3. Exportar consolidated_weights.parquet
@@ -124,7 +129,7 @@ def run() -> bool:
 
         # Resumo final
         final_files = [
-            "consolidated_overral.parquet",
+            "consolidated_overall.parquet",
             "consolidated_weights.parquet",
             "consolidated_context.parquet",
             "consolidated_normalized.parquet",

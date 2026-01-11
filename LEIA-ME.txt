@@ -1,0 +1,91 @@
+==========================================
+PROCESSADOR DE SCOUTS - BOTAFOGO
+Versão 4.0
+==========================================
+
+COMO USAR:
+
+1. Adicione seus arquivos Excel (.xlsx) de scouts na pasta:
+   bases/inputs/scouts_base/
+
+2. Execute o arquivo (escolha um):
+   - ProcessarScouts.bat (se usar Python Embeddable)
+   - python main.py (se tiver Python instalado)
+
+3. Aguarde o processamento (~1 minuto para 4000 jogadores)
+
+4. Arquivos gerados aparecem em:
+   bases/outputs/
+
+==========================================
+ARQUIVOS GERADOS:
+==========================================
+
+consolidated_overral.parquet
+- Dados principais com scores e rankings
+- Usar este arquivo para análises
+
+consolidated_weights.parquet
+- Tabela de pesos utilizada no cálculo
+
+consolidated_context.parquet
+- Metadados e informações adicionais
+
+consolidated_normalized.parquet
+- Valores normalizados dos indicadores
+
+==========================================
+ATENÇÃO:
+==========================================
+
+✓ O sistema processa TODOS os arquivos .xlsx da pasta scouts_base/
+✓ Arquivos antigos em outputs/ serão substituídos
+✓ Mantenha SEMPRE backup dos arquivos Excel originais
+✓ NÃO modifique: bases/inputs/business/base_peso.xlsx
+
+==========================================
+ESTRUTURA DE PASTAS:
+==========================================
+
+BotafogoScouts/
+├── ProcessarScouts.bat      <- EXECUTAR ESTE ARQUIVO
+├── main.py
+├── pipeline/                 (módulos de processamento)
+├── bases/
+│   ├── inputs/
+│   │   ├── scouts_base/      <- ADICIONAR EXCEL AQUI
+│   │   └── business/
+│   │       └── base_peso.xlsx (não mexer)
+│   └── outputs/              (arquivos gerados)
+├── config/
+│   ├── config.yaml
+│   └── positions.yaml
+└── log.txt                   (gerado automaticamente)
+
+==========================================
+SUPORTE:
+==========================================
+
+Em caso de erro:
+1. Verifique se os arquivos Excel estão na pasta correta
+2. Verifique se o arquivo base_peso.xlsx existe
+3. Consulte o arquivo log.txt para detalhes do erro
+4. Envie o log.txt para suporte técnico
+
+==========================================
+NOTAS TÉCNICAS:
+==========================================
+
+- Sistema: Opção A (Substituição Total)
+  Sempre reprocessa todos os arquivos
+
+- Histórico: Mantido via coluna v_current
+  Use v_current == True para dados mais recentes
+
+- Posições suportadas:
+  GK, CB, RCB, LCB, RB, LB, DM, CM, AM, LW, RW, CF
+
+- Indicadores normalizados: 109
+  Escala: 0-100 (normalização por posição + competição)
+
+==========================================

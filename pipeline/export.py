@@ -61,6 +61,19 @@ def run() -> bool:
             "overall_score",
             "rank_overall",
             "rank_position",
+            # Informações pessoais
+            "birth_date",
+            "player_weight",
+            "player_height",
+            "country_id",
+            # Informações de disponibilidade
+            "player_season_minutes",
+            "player_season_appearances",
+            "player_season_starting_appearances",
+            "player_season_average_minutes",
+            "player_season_most_recent_match",
+            "player_season_90s_played",
+            "player_season_360_minutes",
         ]
 
         # Adicionar colunas de score por categoria (CLASSIFICACAO)
@@ -74,6 +87,15 @@ def run() -> bool:
         # Filtrar colunas disponíveis
         available_main_cols = [c for c in main_cols if c in df.columns]
         df_overall = df[available_main_cols].copy()
+
+        # Calcular idade a partir da birth_date
+        if "birth_date" in df_overall.columns:
+            from datetime import datetime
+            current_date = datetime.now()
+            df_overall["player_age"] = df_overall["birth_date"].apply(
+                lambda x: (current_date - pd.to_datetime(x)).days // 365 if pd.notna(x) else None
+            )
+
         df_overall = df_overall.sort_values("rank_overall")
 
         df_overall.to_parquet(OUTPUT_DIR / "consolidated_overall.parquet", index=False)

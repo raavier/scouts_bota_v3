@@ -1,0 +1,6 @@
+# Dependências do Streamlit App
+# Para instalar: pip install -r requirements_streamlit.txt
+
+streamlit>=1.29.0
+pandas>=2.1.4
+openpyxl>=3.1.2

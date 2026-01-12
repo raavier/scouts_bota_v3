@@ -96,6 +96,100 @@ def run() -> bool:
                 lambda x: (current_date - pd.to_datetime(x)).days // 365 if pd.notna(x) else None
             )
 
+        # Calcular coluna de cor baseada nos máximos por competition_id + position_group
+        print("  Calculando coluna de cores...")
+
+        # Mapear nomes das colunas de score para as categorias corretas
+        score_mapping = {}
+        for col in df_overall.columns:
+            if col.startswith("score_"):
+                category = col.replace("score_", "").lower()
+                score_mapping[category] = col
+
+        # Calcular máximos por grupo (competition_id + position_group)
+        grouped = df_overall.groupby(["competition_id", "position_group"])
+
+        # Definir ordem de prioridade para as cores
+        color_priority = [
+            ("overall_score", "#E6E6E6"),
+            (score_mapping.get("offensive", None), "#E2EFDA"),
+            (score_mapping.get("dgp", None), "#C7B8E7"),
+            (score_mapping.get("pass", None), "#F0E199"),
+            (score_mapping.get("defensive", None), "#EFB5B9"),
+        ]
+
+        # Filtrar apenas as colunas que existem
+        color_priority = [(col, color) for col, color in color_priority if col and col in df_overall.columns]
+
+        def get_color(row):
+            """Determina a cor baseada no score máximo do grupo"""
+            # Se position_group é None, retornar branco
+            if pd.isna(row["position_group"]):
+                return "#FFFFFF"
+
+            group_key = (row["competition_id"], row["position_group"])
+
+            # Verificar se o grupo existe
+            try:
+                group_data = grouped.get_group(group_key)
+            except KeyError:
+                return "#FFFFFF"
+
+            # Verificar cada score na ordem de prioridade
+            for score_col, color in color_priority:
+                if pd.notna(row[score_col]):
+                    max_score = group_data[score_col].max()
+                    if row[score_col] == max_score:
+                        return color
+
+            return "#FFFFFF"  # cor padrão se nenhuma condição for atendida
+
+        df_overall["highlight_color"] = df_overall.apply(get_color, axis=1)
+        print(f"  ✓ Coluna highlight_color adicionada")
+
+        # Calcular coluna com todas as categorias máximas
+        print("  Calculando categorias máximas...")
+
+        # Mapeamento de colunas para nomes amigáveis
+        category_names = {
+            "overall_score": "Overall",
+            score_mapping.get("offensive", None): "Offensive",
+            score_mapping.get("dgp", None): "DGP",
+            score_mapping.get("pass", None): "Pass",
+            score_mapping.get("defensive", None): "Defensive",
+        }
+
+        # Filtrar apenas as colunas que existem
+        category_names = {col: name for col, name in category_names.items() if col and col in df_overall.columns}
+
+        def get_max_categories(row):
+            """Retorna todas as categorias em que o jogador é máximo no grupo"""
+            # Se position_group é None, retornar vazio
+            if pd.isna(row["position_group"]):
+                return ""
+
+            group_key = (row["competition_id"], row["position_group"])
+
+            # Verificar se o grupo existe
+            try:
+                group_data = grouped.get_group(group_key)
+            except KeyError:
+                return ""
+
+            max_categories = []
+
+            # Verificar todas as categorias
+            for score_col, category_name in category_names.items():
+                if pd.notna(row[score_col]):
+                    max_score = group_data[score_col].max()
+                    if row[score_col] == max_score:
+                        max_categories.append(category_name)
+
+            return ", ".join(max_categories) if max_categories else ""
+
+        df_overall["max_categories"] = df_overall.apply(get_max_categories, axis=1)
+        print(f"  ✓ Coluna max_categories adicionada")
+
         df_overall = df_overall.sort_values("rank_overall")
 
         df_overall.to_parquet(OUTPUT_DIR / "consolidated_overall.parquet", index=False)

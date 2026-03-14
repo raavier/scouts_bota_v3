@@ -37,7 +37,8 @@ v3/
 ├── bases/
 │   ├── inputs/
 │   │   ├── business/
-│   │   │   └── base_peso.xlsx              # Tabela de pesos (206 indicadores x 12 posições)
+│   │   │   ├── base_peso.xlsx              # Tabela de pesos (206 indicadores x 12 posições)
+│   │   │   └── nacionalidades.xlsx         # Mapeamento country_id → nacionalidade
 │   │   └── scouts_base/
 │   │       ├── argentina_2025.xlsx         # 1002 jogadores - Liga Profesional
 │   │       ├── belgium_1.xlsx              # 501 jogadores - Challenger Pro League
@@ -147,6 +148,7 @@ Tabela principal com scores de jogadores.
 **Colunas principais**:
 - `player_id`, `competition_id` - Identificadores
 - `player_name`, `team_name`, `competition_name` - Informações básicas
+- `country_id`, `nationality` - País de origem
 - `primary_position` - Posição original
 - `mapped_position` - Posição mapeada (GK, CB, RCB, LCB, RB, LB, DM, CM, AM, LW, RW, CF)
 - `position_group` - Grupo da posição (ex: "Zagueiro - Direita")
@@ -203,6 +205,34 @@ Consulte [scripts/checks/README.md](scripts/checks/README.md) para detalhes.
 **Problema**: 107 jogadores com `overall_score = NaN`
 **Causa**: Jogadores sem `primary_position` nos dados de origem (baixa minutagem: 1-26 min)
 **Solução**: `primary_position` preenchido com "Sem posição definida" no notebook 02
+
+## 🌍 Nacionalidades
+
+O sistema mapeia automaticamente o `country_id` para o nome do país.
+
+### Arquivo: bases/inputs/business/nacionalidades.xlsx
+
+| Coluna | Descrição |
+|--------|-----------|
+| `country_id` | Código numérico do país |
+| `nationality` | Nome do país (em inglês) |
+| `player_example` | Jogador de exemplo (para referência) |
+| `team_example` | Time do jogador exemplo |
+
+### Novos códigos de país
+
+Quando o sistema detecta um `country_id` novo (não mapeado):
+1. Adiciona automaticamente ao arquivo nacionalidades.xlsx
+2. Marca a nationality como `PENDENTE`
+3. Exibe aviso no final do processamento
+
+### Resolvendo pendências
+
+1. Abra o arquivo: `bases/inputs/business/nacionalidades.xlsx`
+2. Procure linhas com nationality = `PENDENTE`
+3. Use o `player_example` e `team_example` para pesquisar
+4. Preencha a nacionalidade correta
+5. Execute o processamento novamente
 
 ## 📝 Notas Técnicas
 

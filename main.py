@@ -8,7 +8,8 @@ Este script executa toda a pipeline de processamento:
 3. Consolidação de jogadores
 4. Normalização de indicadores
 5. Cálculo de scores
-6. Exportação final
+6. Cálculo de tendências
+7. Exportação final
 """
 
 import sys
@@ -16,6 +17,16 @@ import logging
 from pathlib import Path
 from datetime import datetime
 import io
+import warnings
+
+# Suprimir warnings que poluem a saída
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", message=".*openpyxl.*")
+warnings.filterwarnings("ignore", message=".*Workbook.*")
+warnings.filterwarnings("ignore", message=".*fragmented.*")
+warnings.filterwarnings("ignore", message=".*PerformanceWarning.*")
 
 # Configurar encoding UTF-8 para stdout (importante no Windows)
 if sys.platform == "win32":
@@ -23,17 +34,38 @@ if sys.platform == "win32":
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 
+def print_progress_bar(current: int, total: int, step_name: str, bar_length: int = 40):
+    """
+    Exibe uma barra de progresso visual no console.
+
+    Args:
+        current: Etapa atual (1-indexed)
+        total: Total de etapas
+        step_name: Nome da etapa atual
+        bar_length: Comprimento da barra em caracteres
+    """
+    percent = current / total
+    filled_length = int(bar_length * percent)
+    bar = "█" * filled_length + "░" * (bar_length - filled_length)
+    percent_str = f"{percent * 100:.0f}%"
+
+    print(f"\n┌{'─' * (bar_length + 10)}┐")
+    print(f"│  [{bar}] {percent_str:>4}  │")
+    print(f"└{'─' * (bar_length + 10)}┘")
+    print(f"  Etapa {current}/{total}: {step_name}")
+    print()
+
+
 def setup_logging():
-    """Configura logging para arquivo log.txt"""
+    """Configura logging para arquivo log.txt (somente arquivo, sem stdout)"""
     log_file = Path(__file__).parent / "log.txt"
 
-    # Configurar logging
+    # Configurar logging apenas para arquivo
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[
             logging.FileHandler(log_file, encoding='utf-8', mode='w'),
-            logging.StreamHandler(sys.stdout)
         ]
     )
 
@@ -118,8 +150,10 @@ def main():
         ]
 
         # Executar pipeline
-        for name, func in steps:
+        total_steps = len(steps)
+        for step_num, (name, func) in enumerate(steps, 1):
             try:
+                print_progress_bar(step_num, total_steps, name)
                 result = func()
                 if not result:
                     print(f"\n✗ ERRO: Etapa '{name}' retornou False")
@@ -140,6 +174,22 @@ def main():
         print("  - consolidated_weights.parquet")
         print("  - consolidated_context.parquet")
         print("  - consolidated_normalized.parquet")
+
+        # Verificar se há nacionalidades pendentes
+        base_dir = Path(__file__).parent
+        pending_file = base_dir / "bases" / "outputs" / "_pending_nationalities.txt"
+        if pending_file.exists():
+            with open(pending_file, "r") as f:
+                pending_count = int(f.read().strip())
+            print()
+            print("!" * 70)
+            print("⚠ ATENÇÃO: NACIONALIDADES PENDENTES")
+            print("!" * 70)
+            print(f"  Existem {pending_count} código(s) de país sem nacionalidade definida.")
+            print("  Edite o arquivo: bases/inputs/business/nacionalidades.xlsx")
+            print("  Procure por linhas com nationality = 'PENDENTE' e preencha.")
+            print("!" * 70)
+
         print()
         print(f"Fim: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 70)

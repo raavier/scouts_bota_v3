@@ -44,6 +44,31 @@ ATENÇÃO:
 ✓ NÃO modifique: bases/inputs/business/base_peso.xlsx
 
 ==========================================
+NACIONALIDADES:
+==========================================
+
+O sistema mapeia automaticamente o country_id para o nome do país.
+
+ARQUIVO: bases/inputs/business/nacionalidades.xlsx
+- country_id: código numérico do país
+- nationality: nome do país (em inglês)
+- player_example: jogador de exemplo (para referência)
+- team_example: time do jogador exemplo
+
+NOVOS CÓDIGOS DE PAÍS:
+Quando o sistema detecta um country_id novo (não mapeado):
+1. Adiciona automaticamente ao arquivo nacionalidades.xlsx
+2. Marca a nationality como "PENDENTE"
+3. Exibe aviso no final do processamento
+
+COMO RESOLVER PENDÊNCIAS:
+1. Abra o arquivo: bases/inputs/business/nacionalidades.xlsx
+2. Procure linhas com nationality = "PENDENTE"
+3. Use o player_example e team_example para pesquisar
+4. Preencha a nacionalidade correta
+5. Execute o processamento novamente
+
+==========================================
 ESTRUTURA DE PASTAS:
 ==========================================
 

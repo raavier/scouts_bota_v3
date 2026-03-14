@@ -75,8 +75,72 @@ def run() -> bool:
         df_scouts = pd.concat(dfs_scouts, ignore_index=True)
         print(f"  ✓ Total: {len(df_scouts)} jogadores carregados")
 
-        # 3. Carregar Tabela de Pesos
-        print("\n[3/5] Carregando tabela de pesos...")
+        # 3. Carregar Mapeamento de Nacionalidades
+        print("\n[3/6] Carregando mapeamento de nacionalidades...")
+        NATIONALITY_FILE = INPUTS_DIR / "business" / "nacionalidades.xlsx"
+
+        if NATIONALITY_FILE.exists():
+            df_nationality = pd.read_excel(NATIONALITY_FILE)
+
+            # Detectar country_ids novos que não estão no arquivo
+            existing_ids = set(df_nationality['country_id'].unique())
+            all_ids = set(df_scouts['country_id'].dropna().unique())
+            new_ids = all_ids - existing_ids
+
+            # Se há novos country_ids, adicionar ao arquivo com "PENDENTE"
+            if new_ids:
+                print(f"  ⚠ Novos country_ids detectados: {sorted(new_ids)}")
+                new_rows = []
+                for cid in new_ids:
+                    # Pegar um jogador de exemplo para esse country_id
+                    sample = df_scouts[df_scouts['country_id'] == cid].iloc[0]
+                    new_rows.append({
+                        'country_id': int(cid),
+                        'nationality': 'PENDENTE',
+                        'player_example': sample.get('player_name', ''),
+                        'team_example': sample.get('team_name', '')
+                    })
+
+                # Adicionar novas linhas ao DataFrame
+                df_new = pd.DataFrame(new_rows)
+                df_nationality = pd.concat([df_nationality, df_new], ignore_index=True)
+                df_nationality = df_nationality.sort_values('country_id')
+
+                # Salvar arquivo atualizado
+                df_nationality.to_excel(NATIONALITY_FILE, index=False)
+                print(f"  ✓ Arquivo nacionalidades.xlsx atualizado com {len(new_ids)} novos códigos")
+
+            # Fazer merge com scouts para adicionar coluna nationality
+            df_scouts = df_scouts.merge(
+                df_nationality[['country_id', 'nationality']],
+                on='country_id',
+                how='left'
+            )
+
+            # Contar pendências (nationality = "PENDENTE" ou vazio)
+            pending_mask = (df_scouts['nationality'] == 'PENDENTE') | (df_scouts['nationality'].isna())
+            pending_count = pending_mask.sum()
+            pending_ids = df_scouts[pending_mask]['country_id'].unique()
+
+            if pending_count > 0:
+                print(f"  ⚠ {pending_count} jogadores com nacionalidade PENDENTE (country_ids: {sorted(pending_ids)})")
+                # Salvar arquivo de controle para aviso no final
+                with open(OUTPUT_DIR / "_pending_nationalities.txt", "w") as f:
+                    f.write(f"{len(pending_ids)}")
+            else:
+                # Remover arquivo de controle se não há pendências
+                pending_file = OUTPUT_DIR / "_pending_nationalities.txt"
+                if pending_file.exists():
+                    pending_file.unlink()
+
+            mapped_count = (~pending_mask).sum()
+            print(f"  ✓ Nacionalidades mapeadas: {mapped_count} de {len(df_scouts)} jogadores")
+        else:
+            print(f"  ⚠ Arquivo de nacionalidades não encontrado: {NATIONALITY_FILE}")
+            df_scouts['nationality'] = None
+
+        # 4. Carregar Tabela de Pesos
+        print("\n[4/6] Carregando tabela de pesos...")
         WEIGHTS_FILE = INPUTS_DIR / "business" / "base_peso.xlsx"
 
         if not WEIGHTS_FILE.exists():
@@ -93,7 +157,7 @@ def run() -> bool:
         print(f"  ✓ Indicadores ignorados: {len(df_weights) - len(df_weights_active)}")
 
         # 4. Validação dos Dados
-        print("\n[4/5] Validando dados...")
+        print("\n[5/6] Validando dados...")
 
         # Verificar indicadores
         indicadores_pesos = set(df_weights_active["INDICADOR"].str.strip())
@@ -109,13 +173,13 @@ def run() -> bool:
             # Não é erro crítico, apenas aviso
 
         # 5. Salvar Dados Carregados
-        print("\n[5/5] Salvando dados intermediários...")
+        print("\n[6/6] Salvando dados intermediários...")
 
         # Converter colunas string (mantém NaN como NaN)
         string_cols = [
             'season_name', 'competition_name', 'team_name', 'player_name',
             'player_first_name', 'player_last_name', 'player_known_name',
-            'primary_position', 'source_file'
+            'primary_position', 'source_file', 'nationality'
         ]
 
         for col in string_cols:

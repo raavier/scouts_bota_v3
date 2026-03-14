@@ -66,6 +66,7 @@ def run() -> bool:
             "player_weight",
             "player_height",
             "country_id",
+            "nationality",
             # Informações de disponibilidade
             "player_season_minutes",
             "player_season_appearances",
@@ -122,10 +123,10 @@ def run() -> bool:
         # Definir ordem de prioridade para as cores
         color_priority = [
             ("overall_score", "#E6E6E6"),
-            (score_mapping.get("offensive", None), "#F87171"),
-            (score_mapping.get("dgp", None), "#FBBF24"),
-            (score_mapping.get("pass", None), "#A78BFA"),
-            (score_mapping.get("defensive", None), "#60A5FA"),
+            (score_mapping.get("offensive", None), "#FECACA"),
+            (score_mapping.get("dgp", None), "#FEF3C7"),
+            (score_mapping.get("pass", None), "#DDD6FE"),
+            (score_mapping.get("defensive", None), "#BFDBFE"),
         ]
 
         # Filtrar apenas as colunas que existem

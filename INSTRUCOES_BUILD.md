@@ -33,7 +33,7 @@ Para criar um pacote standalone sem precisar de Python instalado:
 
 ```bash
 cd c:\jobs\botafogo\v3
-python build_embeddable.py
+python scripts/build/build_embeddable.py
 ```
 
 **O que o script faz**:
@@ -91,7 +91,7 @@ pyinstaller --onefile --console --name ProcessarScouts main.py
 
 ```bash
 # 1. Executar build
-python build_embeddable.py
+python scripts/build/build_embeddable.py
 
 # 2. Navegar para dist
 cd dist/BotafogoScouts
@@ -124,7 +124,7 @@ Antes de entregar ao cliente:
 
 ### Funcionalidade:
 - [ ] `python main.py` funciona localmente
-- [ ] Build executado com sucesso (`python build_embeddable.py`)
+- [ ] Build executado com sucesso (`python scripts/build/build_embeddable.py`)
 - [ ] `ProcessarScouts.bat` executa sem erros
 - [ ] 4 arquivos parquet gerados em `outputs/`
 - [ ] `log.txt` criado automaticamente
@@ -145,7 +145,7 @@ Antes de entregar ao cliente:
 ## 🐛 Troubleshooting
 
 ### Erro: "Python não encontrado"
-- **Solução**: Executar `python build_embeddable.py` primeiro
+- **Solução**: Executar `python scripts/build/build_embeddable.py` primeiro
 
 ### Erro: "Arquivo base_peso.xlsx não encontrado"
 - **Solução**: Verificar se existe em `bases/inputs/business/base_peso.xlsx`
@@ -226,7 +226,7 @@ Conforme plano aprovado:
 
 ## 📞 Próximas Ações Sugeridas
 
-1. **Executar Build**: `python build_embeddable.py`
+1. **Executar Build**: `python scripts/build/build_embeddable.py`
 2. **Testar**: `cd dist/BotafogoScouts && ProcessarScouts.bat`
 3. **Validar**: Verificar se 4 parquets foram gerados
 4. **Comprimir**: Criar `BotafogoScouts.zip`

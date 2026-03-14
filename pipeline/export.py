@@ -37,7 +37,7 @@ def run() -> bool:
 
         # 1. Carregar Dados
         print("[1/4] Carregando dados...")
-        df = pd.read_parquet(OUTPUT_DIR / "_temp_scouts_scored.parquet")
+        df = pd.read_parquet(OUTPUT_DIR / "_temp_scouts_with_trends.parquet")
         df_weights = pd.read_parquet(OUTPUT_DIR / "_temp_weights_active.parquet")
 
         print(f"  ✓ Dados: {len(df)} jogadores, {len(df.columns)} colunas")
@@ -74,6 +74,16 @@ def run() -> bool:
             "player_season_most_recent_match",
             "player_season_90s_played",
             "player_season_360_minutes",
+            # Colunas de tendência
+            "trend_overall_slope",
+            "trend_overall_direction",
+            "trend_overall_change_pct",
+            "trend_overall_periods_used",
+            "trend_overall_months_span",
+            "trend_rank_overall_change",
+            "trend_rank_overall_direction",
+            "trend_rank_position_change",
+            "trend_rank_position_direction",
         ]
 
         # Adicionar colunas de score por categoria (CLASSIFICACAO)
@@ -112,10 +122,10 @@ def run() -> bool:
         # Definir ordem de prioridade para as cores
         color_priority = [
             ("overall_score", "#E6E6E6"),
-            (score_mapping.get("offensive", None), "#E2EFDA"),
-            (score_mapping.get("dgp", None), "#C7B8E7"),
-            (score_mapping.get("pass", None), "#F0E199"),
-            (score_mapping.get("defensive", None), "#EFB5B9"),
+            (score_mapping.get("offensive", None), "#F87171"),
+            (score_mapping.get("dgp", None), "#FBBF24"),
+            (score_mapping.get("pass", None), "#A78BFA"),
+            (score_mapping.get("defensive", None), "#60A5FA"),
         ]
 
         # Filtrar apenas as colunas que existem

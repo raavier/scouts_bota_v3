@@ -65,3 +65,8 @@ bases/inputs/business/*.xlsx
 
 # Claude temporary files
 .claude/settings.local.json
+
+# Keep project build scripts versioned
+!scripts/build/
+!scripts/build/*.py
+!scripts/build/.gitkeep

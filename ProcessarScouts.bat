@@ -17,7 +17,7 @@ if exist "python-embed\python.exe" (
 ) else (
     echo Python não encontrado!
     echo.
-    echo Instale o Python ou execute build_embeddable.py primeiro.
+    echo Instale o Python ou execute scripts\build\build_embeddable.py primeiro.
     echo.
     pause
     exit /b 1

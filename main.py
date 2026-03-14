@@ -102,6 +102,7 @@ def main():
             consolidate_players,
             normalize_indicators,
             calculate_overall,
+            calculate_trends,
             export
         )
 
@@ -112,6 +113,7 @@ def main():
             ("Consolidação de Jogadores", consolidate_players.run),
             ("Normalização de Indicadores", normalize_indicators.run),
             ("Cálculo de Scores", calculate_overall.run),
+            ("Cálculo de Tendências", calculate_trends.run),
             ("Exportação Final", export.run),
         ]
 

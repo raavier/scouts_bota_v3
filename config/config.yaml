@@ -10,13 +10,13 @@ app:
 paths:
   # Caminho base - ÚNICO QUE O USUÁRIO PRECISA ALTERAR
   base: "C:/jobs/botafogo/v3/bases"
-  
+
   # Caminhos derivados do base (ajustados automaticamente)
   inputs: "${base}/inputs"
   scouts_base: "${inputs}/scouts_base"
   business: "${inputs}/business"
   outputs: "${base}/outputs"
-  
+
   # Arquivos específicos
   SCOUTS_BASE: "${scouts_base}"
   WEIGHTS_FILE: "${business}/base_peso.xlsx"
@@ -24,3 +24,10 @@ paths:
   OUTPUT_FILE_WEIGHTS: "${outputs}/consolidated_weights.parquet"
   OUTPUT_FILE_CONTEXT: "${outputs}/consolidated_context.parquet"
   OUTPUT_FILE_NORMALIZED: "${outputs}/consolidated_normalized.parquet"
+
+# Trend Analysis Settings
+trends:
+  enabled: true
+  time_window_months: 3  # Janela temporal para análise de tendência (em meses)
+  min_periods_required: 2  # Mínimo de períodos históricos para calcular regressão linear
+  stable_threshold: 0.05  # Se |slope| < 0.05, considerar tendência "stable"

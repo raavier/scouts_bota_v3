@@ -88,12 +88,12 @@ position_mapping:
   
   "Right Midfielder": 
     position: "AM"
-    position_group: "Meia - Direita"
+    position_group: "Meia"
     position_sub_group: "Direita"
   
   "Left Midfielder": 
     position: "AM"
-    position_group: "Meia - Esquerda"
+    position_group: "Meia"
     position_sub_group: "Esquerda"
   
   # Meias Atacantes

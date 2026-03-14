@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(findstr /N \"ETAPA EXPORTA CONCLU Fim:\" \"C:\\\\Users\\\\ravi\\\\.claude\\\\projects\\\\c--jobs-botafogo-v3\\\\428ea58d-95db-490c-b40d-f876528edc0f\\\\tool-results\\\\toolu_bdrk_011jBFXbUgwmiqTLDw4pW2L2.txt\")"
+    ]
+  }
+}
